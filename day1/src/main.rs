@@ -3,13 +3,7 @@ use std::fs::File;
 use std::path::Path;
 
 fn main() {
-    let file_path = "input.txt";
-    println!("In file {}", file_path);
-    let mut elf: u32 = 0; // counting '\n' chars as a number of elves
-    
-    let mut max_elf_one: u32 = 0; // the elf that carries the most calories
-    let mut max_elf_two: u32 = 0;
-    let mut max_elf_three: u32 = 0;
+    let file_path = "../input.txt";
     
     let mut top_one_inventory: u32 = 0; // biggest inventory
     let mut top_two_inventory: u32 = 0;
@@ -20,37 +14,29 @@ fn main() {
     if let Ok(lines) = read_lines(file_path) {
         for line in lines {
             let tmp: &String = &line.unwrap();
-            if tmp.eq("") {
+            // counting '\n' chars as a number of elves' inventories
+            if tmp.eq("") { 
+                // When we update an elf's inventory, we must update the next ones
                 if inventory > top_one_inventory {
-                    top_three_inventory = top_two_inventory;
-                    max_elf_three = max_elf_two;
+                    top_three_inventory = top_two_inventory; 
                     top_two_inventory = top_one_inventory;
-                    max_elf_two = max_elf_one;
                     top_one_inventory = inventory;
-                    max_elf_one = elf;
                 }
                 else if inventory > top_two_inventory {
                     top_three_inventory = top_two_inventory;
-                    max_elf_three = max_elf_two;
-
                     top_two_inventory = inventory;
-                    max_elf_two = elf;
                 }
                 else if inventory > top_three_inventory {
                     top_three_inventory = inventory;
-                    max_elf_three = elf;
                 }
                 inventory = 0; // let's check another elf's backpack
-                elf += 1;
             }
             else {
                 let itmp: u32 = tmp.parse().unwrap();
                 inventory = inventory + itmp; 
             }
         }
-        println!("and the best elf is {} carrying {} calories", elf, top_one_inventory);
-        println!("and the top three elves are {}, {}, {}, carrying a total of {} + {} + {} = {} calories, lembas4life",
-         max_elf_one, max_elf_two, max_elf_three,
+        println!("and the top three elves are carrying a total of {} + {} + {} = {} calories, lembas4life",
          top_one_inventory, top_two_inventory, top_three_inventory,
          top_one_inventory + top_two_inventory + top_three_inventory,);
     }
