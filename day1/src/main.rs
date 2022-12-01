@@ -3,7 +3,7 @@ use std::fs::File;
 use std::path::Path;
 
 fn main() {
-    let file_path = "/home/nanakix/Documents/aoc-2022/day1/input.txt";
+    let file_path = "input.txt";
     println!("In file {}", file_path);
     let mut elf: u32 = 0; // counting '\n' chars as a number of elves
     
@@ -46,8 +46,6 @@ fn main() {
             else {
                 let itmp: u32 = tmp.parse().unwrap();
                 inventory = inventory + itmp; 
-                // println!("adding {:#?} calories to the elf {} inventory", tmp, &elf);
-                
             }
         }
         println!("and the best elf is {} carrying {} calories", elf, top_one_inventory);
@@ -56,11 +54,6 @@ fn main() {
          top_one_inventory, top_two_inventory, top_three_inventory,
          top_one_inventory + top_two_inventory + top_three_inventory,);
     }
-}
-
-
-fn update_elf(top_number: u32, inventory: u32){
-
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
