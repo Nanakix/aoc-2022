@@ -13,27 +13,30 @@ fn main() {
 
     if let Ok(lines) = read_lines(file_path) {
         for line in lines {
-            let tmp: &String = &line.unwrap();
-            // counting '\n' chars as a number of elves' inventories
-            if tmp.eq("") { 
-                // When we update an elf's inventory, we must update the next ones
-                if inventory > top_one_inventory {
-                    top_three_inventory = top_two_inventory; 
-                    top_two_inventory = top_one_inventory;
-                    top_one_inventory = inventory;
+            match line {
+                Ok(tmp) => { // counting '\n' chars as a number of elves' inventories 
+                    if tmp.eq("") { 
+                        // When we update an elf's inventory, we must update the next ones
+                        if inventory > top_one_inventory {
+                            top_three_inventory = top_two_inventory; 
+                            top_two_inventory = top_one_inventory;
+                            top_one_inventory = inventory;
+                        }
+                        else if inventory > top_two_inventory {
+                            top_three_inventory = top_two_inventory;
+                            top_two_inventory = inventory;
+                        }
+                        else if inventory > top_three_inventory {
+                            top_three_inventory = inventory;
+                        }
+                        inventory = 0; // let's check another elf's backpack
+                    }
+                    else {
+                        let itmp: u32 = tmp.parse().unwrap();
+                        inventory = inventory + itmp; 
+                    }
                 }
-                else if inventory > top_two_inventory {
-                    top_three_inventory = top_two_inventory;
-                    top_two_inventory = inventory;
-                }
-                else if inventory > top_three_inventory {
-                    top_three_inventory = inventory;
-                }
-                inventory = 0; // let's check another elf's backpack
-            }
-            else {
-                let itmp: u32 = tmp.parse().unwrap();
-                inventory = inventory + itmp; 
+            Err(_e) => println!("Error reading line")
             }
         }
         println!("and the top three elves are carrying a total of {} + {} + {} = {} calories, lembas4life",
