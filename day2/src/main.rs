@@ -30,7 +30,6 @@ fn main() {
 }
 
 fn tatakau(uke: &str, tori: &str) -> u32 {
-
 // A Rock, B Paper, C Scissors
 // X Rock, Y Paper, Z Scissors
     match uke {
@@ -52,7 +51,7 @@ fn tatakau(uke: &str, tori: &str) -> u32 {
                 "Z" => 3+3,
                 _ => panic!("wtf !s dat r0und m8"),
             },
-        _ => panic!("wtf !s dat r0und m8: {} found at line ", uke),
+        _ => panic!("wtf !s dat r0und m8: {}", uke),
     }
 }
 
