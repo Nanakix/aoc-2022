@@ -8,7 +8,6 @@ use std::path::Path;
 fn main() {
 
     let file_path = "input";
-    
 
     if let Ok(lines) = read_lines(file_path) {
         let mut score: u32 = 0;
@@ -30,14 +29,29 @@ fn main() {
     }
 }
 
-fn tatakau(uke: &str, tori: &str) -> bool {
+fn tatakau(uke: &str, tori: &str) -> u32 {
 
 // A Rock, B Paper, C Scissors
 // X Rock, Y Paper, Z Scissors
     match uke {
-        "A" =>  tori != "Z",
-        "B" => tori != "X",
-        "C" => tori != "Y",
+        "A" =>  match tori {
+                    "X" => 1+3,
+                    "Y" => 2+6,
+                    "Z" => 3,
+                    _ => panic!("wtf !s dat r0und m8"),
+            },
+        "B" =>  match tori {
+                "X" => 1,
+                "Y" => 2+3,
+                "Z" => 3+6,
+                _ => panic!("wtf !s dat r0und m8"),
+            },
+        "C" => match tori {
+                "X" => 1+6,
+                "Y" => 2,
+                "Z" => 3+3,
+                _ => panic!("wtf !s dat r0und m8"),
+            },
         _ => panic!("wtf !s dat r0und m8: {} found at line ", uke),
     }
 }
