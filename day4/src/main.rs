@@ -14,13 +14,19 @@ fn main() {
                     let (a,b) = &tmp.split_once(",").unwrap_or_default();
                     let va = get_range(a);
                     let vb = get_range(b);
-                        if vb.iter().all(|item| va.contains(item)) {
+                        // part 2
+                        if vb.iter().any(|item| va.contains(item)) {
                             contained += 1;
                         }
-                        else if va.iter().all(|item| vb.contains(item)){
-                            contained += 1;
-                            
-                        }
+                        // end part 2
+                        // part 1
+                        // if vb.iter().all(|item| va.contains(item)) {
+                        //     contained += 1;
+                        // }
+                        // else if va.iter().all(|item| vb.contains(item)){
+                        //     contained += 1;     
+                        // }
+                        // end part 1
                         else {
                             println!("nope");
                         }
@@ -46,6 +52,6 @@ fn get_range (elf: &str) -> Vec<u32>{
     let begin: u32 = one.parse::<>().unwrap();
     let end: u32 = two.parse::<>().unwrap();
     let v = (begin..end+1).collect::<Vec<_>>(); // why +1 ? I dunno
-    // println!("{} {} {:?}", &begin, &end, &v);
+    println!("{} {} {:?}", &begin, &end, &v);
     v
 }
