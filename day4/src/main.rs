@@ -54,4 +54,5 @@ fn get_range (elf: &str) -> Vec<u32>{
     let v = (begin..end+1).collect::<Vec<_>>(); // why +1 ? I dunno
     println!("{} {} {:?}", &begin, &end, &v);
     v
+    //FIXME: reduce complexity by just checking min and max limits instead of adding n elts (exploding complexity)
 }
