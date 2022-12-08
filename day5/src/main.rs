@@ -21,8 +21,20 @@ fn main() {
                 // parse the moves
                 let load: Vec<u8> = l.split(" ").skip(1).step_by(2).flat_map(|w| w.parse::<u8>()).collect();
                 // do the moves
+                //p1
+                // println!("{:?}", &v);
+                // for _ in 0..load[0] {
+                //     let tmp = v[(load[1]-1) as usize].pop_back().unwrap_or_default();
+                //     v[(load[2]-1) as usize].push_back(tmp);
+                // }
+                //p2
+                let mut holder: Vec<u8> = Vec::new();//9001 exclusive feature
                 for _ in 0..load[0] {
                     let tmp = v[(load[1]-1) as usize].pop_back().unwrap_or_default();
+                    holder.push(tmp);
+                }
+                for _ in 0..holder.len() {
+                    let tmp = holder.pop().unwrap();
                     v[(load[2]-1) as usize].push_back(tmp);
                 }
             }
