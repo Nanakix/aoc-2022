@@ -34,31 +34,31 @@ fn parse_hier(s: String, dirs: &mut HashMap<String, u32>, current_path_stack: &m
     let mut sp: Vec<&str> = s.split(" ").collect();
     match sp[0] {
         "$" => {
-            // println!("cmd");
-            parse_cmd(sp.drain(1..).collect(),  current_path_stack);
+            parse_cmd(sp.drain(1..).collect(),  dirs, current_path_stack); 
         },
         "dir" => { 
-            // println!("dir {}", sp[1]);
-            dirs.insert(sp[1].to_string(), 0);
+            // dirs.entry(sp[1].to_string()).or_insert(0);
         },
         _ => {
             let nb: u32 = sp[0].get(..sp[0].len()).unwrap().parse().unwrap(); // if it's a number
-                // dirs.into_iter().for_each(|e| println!("{:?}", e));
-            println!("current stack: {:?}", current_path_stack);
-            for d in current_path_stack {
-                *dirs.entry(d.to_string()).or_insert(0) += nb;
+            // println!("current stack: {:?}", current_path_stack);
+            for i in 0..current_path_stack.len()+1 {
+                dirs.entry(current_path_stack[0..i].concat()).and_modify(|v| *v += nb);
             }
         }
     }    
 }
 
-fn parse_cmd(cmd: Vec<&str>,  current_path_stack: &mut Vec<String>) {
+fn parse_cmd(cmd: Vec<&str>,  dirs: &mut HashMap<String, u32>, current_path_stack: &mut Vec<String>) {
     match cmd[0] {
         "cd" => {
             match cmd[1] {
                 "/" => { *current_path_stack = vec!["/".to_string()] },
                 ".." => { current_path_stack.pop().unwrap_or_default(); },
-                _ => current_path_stack.push(cmd[1].to_string()),
+                _ => {
+                    current_path_stack.push(cmd[1].to_string());
+                    dirs.entry(current_path_stack.concat()).or_insert(0);
+                },
             };
         },
         "ls" => (),
@@ -66,11 +66,6 @@ fn parse_cmd(cmd: Vec<&str>,  current_path_stack: &mut Vec<String>) {
     }
 }
 
-// cd dir => dirs.push(dir)
-// cd / => current_path = vec!["/"]
-// cd .. => current_path.pop
-// et quand tu croise un fichier après un ls tu fais 
-// for dir in current_path hashmap[dir] += size
 #[test]
 fn test_parse() {
     let expected: u32 = 95437;
