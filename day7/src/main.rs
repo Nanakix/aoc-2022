@@ -4,7 +4,9 @@ use std::fs::File;
 use std::path::Path;
 
 
-const P1_SIZE: u32 = 100000;
+const P1_SIZE: u32 = 100000; // p1
+const P2_SIZE: u32 = 30000000;
+const DISK_SPACE: u32 = 70000000;
 fn main() {
     let file_path = "input2";
     let mut current_path_stack: Vec<String> = Vec::new();
@@ -14,9 +16,16 @@ fn main() {
             parse_hier(l, &mut rep_sizes, &mut current_path_stack); // p1
         }
     }
-    rep_sizes.retain(|_, v| *v <= P1_SIZE ); // return only dirs with size < P1_SIZE
-    println!("rep_sizes: {:?}", rep_sizes);
-    let res = rep_sizes.values().sum::<u32>();  
+    // p1
+        // rep_sizes.retain(|_, v| *v <= P1_SIZE ); // return only dirs with size < P1_SIZE
+        // println!("rep_sizes: {:?}", rep_sizes);
+        // let res = rep_sizes.values().sum::<u32>();  
+        // println!("res: {}", res);// p1: sum of the dirs of size <= 100000
+    // p2
+    let free_space: u32 = DISK_SPACE - rep_sizes.get(&"/".to_string()).unwrap();
+    let size_to_free_for_update: u32 = P2_SIZE - free_space;
+    rep_sizes.retain(|_, v| *v > size_to_free_for_update); // keep only the dirs whose size > what we need to free
+    let res = rep_sizes.values().min().unwrap().clone();  
     println!("res: {}", res);// p1: sum of the dirs of size <= 100000
 }
 
@@ -53,7 +62,7 @@ fn parse_cmd(cmd: Vec<&str>,  dirs: &mut HashMap<String, u32>, current_path_stac
     match cmd[0] {
         "cd" => {
             match cmd[1] {
-                "/" => { *current_path_stack = vec!["/".to_string()] },
+                // "/" => { *current_path_stack = vec!["/".to_string()] },
                 ".." => { current_path_stack.pop().unwrap_or_default(); },
                 _ => {
                     current_path_stack.push(cmd[1].to_string());
@@ -77,8 +86,22 @@ fn test_parse() {
         }
     }
     rep_sizes.retain(|_, v| *v <= P1_SIZE ); // return only dirs with size < P1_SIZE
-    println!("{:?}", rep_sizes);
     let res = rep_sizes.values().sum::<u32>();
-    println!("{}", res);
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn test_p2() {
+    let expected: u32 = 24933642;
+    let mut current_path_stack: Vec<String> = Vec::new();
+    let mut rep_sizes: HashMap<String, u32> = HashMap::new();
+    if let Ok(lines) = read_lines("test1") {
+        for l in lines.flatten() {
+            parse_hier(l, &mut rep_sizes, &mut current_path_stack);
+        }
+    }
+    let size_to_free_for_update: u32 = P2_SIZE - (DISK_SPACE - rep_sizes.get(&"/".to_string()).unwrap());
+    rep_sizes.retain(|_, v| *v > size_to_free_for_update); // keep only the dirs whose size > what we need to free
+    let res = rep_sizes.values().min().unwrap().clone();  
     assert_eq!(expected, res);
 }
